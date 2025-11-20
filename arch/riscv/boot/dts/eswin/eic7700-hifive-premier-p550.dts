@@ -276,3 +276,7 @@
 &uart2 {
 	status = "okay";
 };
+
+&pcie {
+	status = "okay";
+};
