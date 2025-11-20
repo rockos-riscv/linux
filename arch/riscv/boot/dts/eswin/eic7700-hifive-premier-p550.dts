@@ -12,6 +12,8 @@
 	model = "SiFive HiFive Premier P550";
 
 	aliases {
+		mmc0 = &sdhci_emmc;
+		mmc1 = &sdio0;
 		serial0 = &uart0;
 		ethernet0 = &gmac0;
 		ethernet1 = &gmac1;
@@ -257,6 +259,14 @@
 		reset-assert-us = <10000>;
 		reset-deassert-us = <80000>;
 	};
+};
+
+&sdhci_emmc {
+	status = "okay";
+};
+
+&sdio0 {
+	status = "okay";
 };
 
 &uart0 {
