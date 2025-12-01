@@ -294,6 +294,9 @@ static int __init sifive_ccache_init(void)
 	const struct of_device_id *match;
 	unsigned long quirks __maybe_unused;
 	int rc;
+#ifdef CONFIG_ARCH_ESWIN
+	unsigned int config, ways;
+#endif
 
 	np = of_find_matching_node_and_match(NULL, sifive_ccache_ids, &match);
 	if (!np)
@@ -316,6 +319,12 @@ static int __init sifive_ccache_init(void)
 		rc = -ENOENT;
 		goto err_unmap;
 	}
+
+#ifdef CONFIG_ARCH_ESWIN
+	config = readl(ccache_base + SIFIVE_CCACHE_CONFIG);
+	ways = (config >> 8) & 0xff;
+	writel(ways-1, ccache_base + SIFIVE_CCACHE_WAYENABLE);
+#endif
 
 #ifdef CONFIG_RISCV_NONSTANDARD_CACHE_OPS
 	if (quirks & QUIRK_NONSTANDARD_CACHE_OPS) {
