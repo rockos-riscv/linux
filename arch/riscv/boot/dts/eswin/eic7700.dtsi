@@ -9,6 +9,7 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/reset/eswin,eic7700-reset.h>
 #include <dt-bindings/riscv/physical-memory.h>
+#include "eic7700-opptable.dtsi"
 
 / {
 	#address-cells = <2>;
@@ -21,6 +22,16 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 		timebase-frequency = <1000000>;
+
+		idle-states {
+			CPU_RET: cpu-retentive {
+				compatible = "riscv,idle-state";
+				riscv,sbi-suspend-param = <0x00000000>;
+				entry-latency-us = <20>;
+				exit-latency-us = <40>;
+				min-residency-us = <80>;
+			};
+		};
 
 		cpu0: cpu@0 {
 			compatible = "sifive,p550", "riscv";
@@ -42,6 +53,12 @@
 			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "h", "sscofpmf",
 					       "zba", "zbb", "zicsr", "zifencei";
 			tlb-split;
+
+			clocks = <&clk EIC7700_CLK_GATE_CPU_EXT_SRC_CORE_CLK_0>;
+			operating-points-v2 = <&cpu_opp_table>;
+			#cooling-cells = <2>;
+			dynamic-power-coefficient = <800>;
+			cpu-idle-states = <&CPU_RET>;
 
 			cpu0_intc: interrupt-controller {
 				compatible = "riscv,cpu-intc";
@@ -71,6 +88,12 @@
 					       "zba", "zbb", "zicsr", "zifencei";
 			tlb-split;
 
+			clocks = <&clk EIC7700_CLK_GATE_CPU_EXT_SRC_CORE_CLK_1>;
+			operating-points-v2 = <&cpu_opp_table>;
+			#cooling-cells = <2>;
+			dynamic-power-coefficient = <800>;
+			cpu-idle-states = <&CPU_RET>;
+
 			cpu1_intc: interrupt-controller {
 				compatible = "riscv,cpu-intc";
 				#interrupt-cells = <1>;
@@ -99,6 +122,12 @@
 					       "zba", "zbb", "zicsr", "zifencei";
 			tlb-split;
 
+			clocks = <&clk EIC7700_CLK_GATE_CPU_EXT_SRC_CORE_CLK_2>;
+			operating-points-v2 = <&cpu_opp_table>;
+			#cooling-cells = <2>;
+			dynamic-power-coefficient = <800>;
+			cpu-idle-states = <&CPU_RET>;
+
 			cpu2_intc: interrupt-controller {
 				compatible = "riscv,cpu-intc";
 				#interrupt-cells = <1>;
@@ -126,6 +155,12 @@
 			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "h", "sscofpmf",
 					       "zba", "zbb", "zicsr", "zifencei";
 			tlb-split;
+
+			clocks = <&clk EIC7700_CLK_GATE_CPU_EXT_SRC_CORE_CLK_3>;
+			operating-points-v2 = <&cpu_opp_table>;
+			#cooling-cells = <2>;
+			dynamic-power-coefficient = <800>;
+			cpu-idle-states = <&CPU_RET>;
 
 			cpu3_intc: interrupt-controller {
 				compatible = "riscv,cpu-intc";
