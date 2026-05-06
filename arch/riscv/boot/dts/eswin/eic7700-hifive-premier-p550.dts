@@ -228,6 +228,13 @@
 			bias-disable;
 		};
 	};
+
+	pinctrl_pwm0: pwm0-grp {
+		pwm0-pins {
+			pins = "fan_pwm";
+			function = "pwm";
+		};
+	};
 };
 
 &gmac0 {
@@ -311,4 +318,10 @@
 
 &usb1 {
 	status = "okay";
+};
+
+&pwm0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm0>;
 };
