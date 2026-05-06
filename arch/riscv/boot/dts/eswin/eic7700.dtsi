@@ -7,6 +7,7 @@
 
 #include <dt-bindings/clock/eswin,eic7700-clock.h>
 #include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pwm/pwm.h>
 #include <dt-bindings/reset/eswin,eic7700-reset.h>
 #include <dt-bindings/riscv/physical-memory.h>
 #include "eic7700-opptable.dtsi"
@@ -643,6 +644,21 @@
 				  <&clk EIC7700_CLK_GATE_LSP_TIMER_PCLK>;
 			clock-names = "bus", "timer";
 			resets = <&reset EIC7700_RESET_TIMER>;
+			status = "disabled";
+		};
+
+		fan_control: fan-control@50b50000 {
+			compatible = "eswin-fan-control";
+			reg = <0x0 0x50b50000 0x0 0x10000>;
+			clocks = <&clk EIC7700_CLK_GATE_LSP_FAN_PCLK>;
+			clock-names = "pclk";
+			resets = <&reset EIC7700_RESET_FAN>;
+			reset-names = "fan_rst";
+			interrupts = <354>;
+			interrupt-names = "fanirq";
+			pulses-per-revolution = <2>;
+			pwm-minimum-period = <1000>;
+			pwms = <&pwm0 0 100000 PWM_POLARITY_INVERTED>;
 			status = "disabled";
 		};
 
