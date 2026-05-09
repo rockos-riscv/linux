@@ -593,9 +593,12 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 		nacl_csr_write(nsh, CSR_HEDELEG, cfg->hedeleg);
 		nacl_csr_write(nsh, CSR_HVIP, csr->hvip);
 		nacl_csr_write(nsh, CSR_VSATP, csr->vsatp);
-		nacl_csr_write(nsh, CSR_HENVCFG, cfg->henvcfg);
-		if (IS_ENABLED(CONFIG_32BIT))
-			nacl_csr_write(nsh, CSR_HENVCFGH, cfg->henvcfg >> 32);
+		if (!IS_ENABLED(CONFIG_ERRATA_SIFIVE_H_0_6_1) ||
+		    !sifive_h_0_6_1) {
+			nacl_csr_write(nsh, CSR_HENVCFG, cfg->henvcfg);
+			if (IS_ENABLED(CONFIG_32BIT))
+				nacl_csr_write(nsh, CSR_HENVCFGH, cfg->henvcfg >> 32);
+		}
 		if (riscv_has_extension_unlikely(RISCV_ISA_EXT_SMSTATEEN)) {
 			nacl_csr_write(nsh, CSR_HSTATEEN0, cfg->hstateen0);
 			if (IS_ENABLED(CONFIG_32BIT))
@@ -612,9 +615,12 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 		csr_write(CSR_HEDELEG, cfg->hedeleg);
 		csr_write(CSR_HVIP, csr->hvip);
 		csr_write(CSR_VSATP, csr->vsatp);
-		csr_write(CSR_HENVCFG, cfg->henvcfg);
-		if (IS_ENABLED(CONFIG_32BIT))
-			csr_write(CSR_HENVCFGH, cfg->henvcfg >> 32);
+		if (!IS_ENABLED(CONFIG_ERRATA_SIFIVE_H_0_6_1) ||
+		    !sifive_h_0_6_1) {
+			csr_write(CSR_HENVCFG, cfg->henvcfg);
+			if (IS_ENABLED(CONFIG_32BIT))
+				csr_write(CSR_HENVCFGH, cfg->henvcfg >> 32);
+		}
 		if (riscv_has_extension_unlikely(RISCV_ISA_EXT_SMSTATEEN)) {
 			csr_write(CSR_HSTATEEN0, cfg->hstateen0);
 			if (IS_ENABLED(CONFIG_32BIT))
