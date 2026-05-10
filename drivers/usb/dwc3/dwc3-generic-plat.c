@@ -21,6 +21,8 @@
 #define EIC7700_HSP_BUS_CLK_EN		BIT(28)
 #define EIC7700_HSP_AXI_LP_XM_CSYSREQ	BIT(0)
 #define EIC7700_HSP_AXI_LP_XS_CSYSREQ	BIT(16)
+#define EIC7700_HSP_USB_VBUS_FSEL	0x2a
+#define EIC7700_HSP_USB_MPLL_DEFAULT	0x0
 
 struct dwc3_generic {
 	struct device		*dev;
@@ -46,9 +48,11 @@ static int dwc3_eic7700_init(struct dwc3_generic *dwc3g)
 {
 	struct device *dev = dwc3g->dev;
 	struct regmap *regmap;
+	u32 hsp_usb_vbus_freq;
 	u32 hsp_usb_axi_lp;
+	u32 hsp_usb_mpll;
 	u32 hsp_usb_bus;
-	u32 args[2];
+	u32 args[4];
 
 	regmap = syscon_regmap_lookup_by_phandle_args(dev->of_node,
 						      "eswin,hsp-sp-csr",
@@ -60,6 +64,15 @@ static int dwc3_eic7700_init(struct dwc3_generic *dwc3g)
 
 	hsp_usb_bus       = args[0];
 	hsp_usb_axi_lp    = args[1];
+	hsp_usb_vbus_freq = args[2];
+	hsp_usb_mpll      = args[3];
+
+	/*
+	 * The reference clock is 24 MHz; program the MPLL to satisfy the USB
+	 * PHY's 125 MHz requirement and select the matching VBUS frequency.
+	 */
+	regmap_write(regmap, hsp_usb_vbus_freq, EIC7700_HSP_USB_VBUS_FSEL);
+	regmap_write(regmap, hsp_usb_mpll, EIC7700_HSP_USB_MPLL_DEFAULT);
 
 	/*
 	 * Overwrite (not read-modify-write) the bus control register so that
