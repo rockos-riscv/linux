@@ -115,6 +115,10 @@
 	};
 };
 
+&pcie {
+	status = "okay";
+};
+
 &sdhci_emmc {
 	status = "okay";
 	/delete-property/ mmc-hs400-1_8v;
