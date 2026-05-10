@@ -523,7 +523,7 @@
 			snps,dis-del-phy-power-chg-quirk;
 			snps,parkmode-disable-ss-quirk;
 			maximum-speed = "high-speed";
-			eswin,hsp-sp-csr = <&hsp_sp_csr 0x800 0x818>;
+			eswin,hsp-sp-csr = <&hsp_sp_csr 0x800 0x808 0x83c 0x840>;
 			status = "disabled";
 		};
 
@@ -548,7 +548,7 @@
 			snps,parkmode-disable-ss-quirk;
 			maximum-speed = "high-speed";
 			wakeup-source;
-			eswin,hsp-sp-csr = <&hsp_sp_csr 0x900 0x918>;
+			eswin,hsp-sp-csr = <&hsp_sp_csr 0x900 0x908 0x93c 0x940>;
 			status = "disabled";
 		};
 
