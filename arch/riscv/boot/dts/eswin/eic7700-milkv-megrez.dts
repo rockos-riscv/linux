@@ -49,6 +49,14 @@
 	};
 };
 
+&cpu_opp_table {
+	opp-1600000000 {
+		opp-hz = /bits/ 64 <1600000000>;
+		opp-microvolt = <800000>;
+		clock-latency-ns = <70000>;
+	};
+};
+
 &xtal24m {
 	clock-frequency = <24000000>;
 	clock-output-names = "xtal24m";
