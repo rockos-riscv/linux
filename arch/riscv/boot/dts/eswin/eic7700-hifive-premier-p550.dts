@@ -85,6 +85,15 @@
 		};
 	};
 
+	pinctrl_gpio13: gpio13-grp {
+		gpio13-pins {
+			pins = "mode_set0";
+			function = "gpio";
+			input-enable;
+			bias-pull-up;
+		};
+	};
+
 	pinctrl_gpio14: gpio14-grp {
 		gpio14-pins {
 			pins = "mode_set1";
@@ -305,6 +314,9 @@
 
 &sdio0 {
 	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_gpio13>;
+	cd-gpios = <&gpioA 13 GPIO_ACTIVE_LOW>;
 };
 
 &uart0 {
