@@ -12,6 +12,8 @@
 	model = "Milk-V Megrez";
 
 	aliases {
+		mmc0 = &sdhci_emmc;
+		mmc1 = &sdio0;
 		serial0 = &uart0;
 		ethernet0 = &gmac0;
 		ethernet1 = &gmac1;
@@ -39,6 +41,15 @@
 &pinctrl {
 	status = "okay";
 	vrgmii-supply = <&vcc_1v8>;
+
+	pinctrl_gpio13: gpio13-grp {
+		gpio13-pins {
+			pins = "mode_set0";
+			function = "gpio";
+			input-enable;
+			bias-pull-up;
+		};
+	};
 
 	pinctrl_gpio16: gpio16-grp {
 		gpio16-pins {
@@ -102,6 +113,19 @@
 		reset-assert-us = <10000>;
 		reset-deassert-us = <80000>;
 	};
+};
+
+&sdhci_emmc {
+	status = "okay";
+	/delete-property/ mmc-hs400-1_8v;
+	mmc-hs200-1_8v;
+};
+
+&sdio0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_gpio13>;
+	cd-gpios = <&gpioA 13 GPIO_ACTIVE_LOW>;
 };
 
 &uart0 {
