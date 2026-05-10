@@ -17,6 +17,8 @@
 #define EIC7700_HSP_BUS_FILTER_EN	BIT(0)
 #define EIC7700_HSP_BUS_CLKEN_GM	BIT(9)
 #define EIC7700_HSP_BUS_CLKEN_GS	BIT(16)
+#define EIC7700_HSP_BUS_SW_RST_N	BIT(24)
+#define EIC7700_HSP_BUS_CLK_EN		BIT(28)
 #define EIC7700_HSP_AXI_LP_XM_CSYSREQ	BIT(0)
 #define EIC7700_HSP_AXI_LP_XS_CSYSREQ	BIT(16)
 
@@ -47,7 +49,6 @@ static int dwc3_eic7700_init(struct dwc3_generic *dwc3g)
 	u32 hsp_usb_axi_lp;
 	u32 hsp_usb_bus;
 	u32 args[2];
-	u32 val;
 
 	regmap = syscon_regmap_lookup_by_phandle_args(dev->of_node,
 						      "eswin,hsp-sp-csr",
@@ -60,9 +61,15 @@ static int dwc3_eic7700_init(struct dwc3_generic *dwc3g)
 	hsp_usb_bus       = args[0];
 	hsp_usb_axi_lp    = args[1];
 
-	regmap_read(regmap, hsp_usb_bus, &val);
-	regmap_write(regmap, hsp_usb_bus, val | EIC7700_HSP_BUS_FILTER_EN |
-		     EIC7700_HSP_BUS_CLKEN_GM | EIC7700_HSP_BUS_CLKEN_GS);
+	/*
+	 * Overwrite (not read-modify-write) the bus control register so that
+	 * usb_phy_reset (bit 25, high-active, default 1) is cleared and the
+	 * PHY actually leaves reset; deassert the controller soft reset
+	 * (bit 24, low-active sw_rst_n) and keep the bus/ref clocks enabled.
+	 */
+	regmap_write(regmap, hsp_usb_bus, EIC7700_HSP_BUS_FILTER_EN |
+		     EIC7700_HSP_BUS_CLKEN_GM | EIC7700_HSP_BUS_CLKEN_GS |
+		     EIC7700_HSP_BUS_SW_RST_N | EIC7700_HSP_BUS_CLK_EN);
 
 	regmap_write(regmap, hsp_usb_axi_lp, EIC7700_HSP_AXI_LP_XM_CSYSREQ |
 		     EIC7700_HSP_AXI_LP_XS_CSYSREQ);
