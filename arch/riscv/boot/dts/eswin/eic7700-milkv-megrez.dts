@@ -91,6 +91,19 @@
 			function = "pwm";
 		};
 	};
+
+	pinctrl_fan_tach_pins: fan-tach-grp {
+		fan-tach-pins {
+			pins = "fan_tach";
+			function = "fan_tach";
+		};
+	};
+};
+
+&fan_control {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_fan_tach_pins>;
 };
 
 &gmac0 {
