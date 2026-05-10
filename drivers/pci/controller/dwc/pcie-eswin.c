@@ -389,6 +389,7 @@ static const struct of_device_id eswin_pcie_of_match[] = {
 	{ .compatible = "eswin,eic7700-pcie", .data = &eswin_eic7700_data },
 	{}
 };
+MODULE_DEVICE_TABLE(of, eswin_pcie_of_match);
 
 static struct platform_driver eswin_pcie_driver = {
 	.probe = eswin_pcie_probe,
@@ -399,7 +400,7 @@ static struct platform_driver eswin_pcie_driver = {
 		.pm = &eswin_pcie_pm,
 	},
 };
-builtin_platform_driver(eswin_pcie_driver);
+module_platform_driver(eswin_pcie_driver);
 
 MODULE_DESCRIPTION("ESWIN PCIe Root Complex driver");
 MODULE_AUTHOR("Yu Ning <ningyu@eswincomputing.com>");
